@@ -1,0 +1,12 @@
+# Normaliza quebras de linha: LF no repositório, evita churn entre SOs
+* text=auto eol=lf
+
+# Binários / assets — não mexer
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary

@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* NÃO usar `color-scheme: dark` aqui: ele força o Chromium a desenhar a
+     scrollbar nativa do sistema na janela e IGNORAR o ::-webkit-scrollbar
+     abaixo (o fio azul). A página já é escura pelo background do body. */
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* NÃO usar scroll-behavior: smooth aqui — a suavidade é controlada só pelo
+     JS (scrollToAnchor). Deixar smooth no CSS faz o "restaurar posição" do
+     scroll-lock (menu/modal) animar e brigar com a navegação. */
+
+  body {
+    margin: 0;
+    background-color: #040d18;
+    color: #fafaf8;
+    font-family: "Manrope", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    margin: 0;
+  }
+}
+
+/* ── Scrollbar: fio azul (WebKit/Chromium) ─────────────────────────────────
+   IMPORTANTE: NÃO usar as propriedades padrão `scrollbar-width` /
+   `scrollbar-color` aqui. No Chrome 121+ elas DESLIGAM o ::-webkit-scrollbar
+   inteiro (as duas APIs não convivem). Como o alvo é Chromium, usamos só a
+   API webkit, que dá controle total do fio. (Firefox: cairia no default.) */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a6fb0;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a83c8;
+}
+
+@layer utilities {
+  /* Scroll-reveal: elements start hidden + nudged down, then settle */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* The "slab" divider line draws itself in when revealed */
+  .slab-line {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .slab-line.is-visible {
+    transform: scaleX(1);
+  }
+}
+
+/* Respect users who prefer reduced motion: kill all motion + reveals */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .slab-line {
+    transform: scaleX(1);
+  }
+}
