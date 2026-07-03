@@ -32,7 +32,10 @@ export function useScrollReveal(): void {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      // threshold 0 = dispara no primeiro pixel (seguro até p/ elementos altos).
+      // rootMargin bottom +14% = começa a revelar ANTES do elemento entrar,
+      // então ele já chega pronto na tela em vez de aparecer em branco.
+      { threshold: 0, rootMargin: "0px 0px 14% 0px" }
     );
 
     targets.forEach((el) => observer.observe(el));
